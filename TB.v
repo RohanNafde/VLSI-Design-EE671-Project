@@ -64,16 +64,14 @@ module tb_sdram_simple;
     parameter clk_100m0_i_period = 10;
 
     // State type for testbench FSM
-    typedef enum logic [2:0] {
-        ST_WAIT,
-        ST_IDLE,
-        ST_READ,
-        ST_WRITE,
-        ST_REFRESH
-    } state_type;
+    parameter ST_WAIT    = 3'b000,
+			  ST_IDLE    = 3'b001,
+			  ST_READ    = 3'b010,
+			  ST_WRITE   = 3'b011,
+			  ST_REFRESH = 3'b100;
 
-    state_type state_r = ST_WAIT;
-    state_type state_x = ST_WAIT;
+    reg [2:0] state_r = ST_WAIT;
+    reg [2:0] state_x = ST_WAIT;
 
     // Instantiate the Unit Under Test (UUT)
     sdram_simple uut (
