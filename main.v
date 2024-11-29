@@ -30,29 +30,29 @@
 
 module sdram_simple (
 	// Host Side
-	input wire clk_100m0_i    // Master clock
-	input wire reset_i        // Reset, active high
-	input wire refresh_i      // Initiate a refresh cycle, active high
-	input wire rw_i           // Initiate a read or write operation, active high
-	input wire we_i           // Write enable, active low
-	input wire [23:0] addr_i  // Address from host to SDRAM
-	input wire [15:0] data_i  // Data from host to SDRAM
-	input wire ub_i           // Data upper byte enable, active low
-	input wire lb_i           // Data lower byte enable, active low
-	output reg ready_o       // Set to '1' when the memory is ready
-	output reg done_o        // Read, write, or refresh, operation is done
-	output reg [15:0] data_o // Data from SDRAM to host
+	input wire clk_100m0_i,    // Master clock
+	input wire reset_i,        // Reset, active high
+	input wire refresh_i,      // Initiate a refresh cycle, active high
+	input wire rw_i,           // Initiate a read or write operation, active high
+	input wire we_i,           // Write enable, active low
+	input wire [23:0] addr_i,  // Address from host to SDRAM
+	input wire [15:0] data_i,  // Data from host to SDRAM
+	input wire ub_i,           // Data upper byte enable, active low
+	input wire lb_i,           // Data lower byte enable, active low
+	output reg ready_o,       // Set to '1' when the memory is ready
+	output reg done_o,        // Read, write, or refresh, operation is done
+	output reg [15:0] data_o, // Data from SDRAM to host
 
 	// SDRAM Side
-	output reg sdCke_o         // Clock-enable to SDRAM
-	output reg sdCe_bo	        // Chip-select to SDRAM
-	output reg sdRas_bo	    // SDRAM row address strobe
-	output reg sdCas_bo	    // SDRAM column address strobe
-	output reg sdWe_bo	        // SDRAM write enable
-	output reg [1:0] sdBs_bo   // SDRAM bank address
-	output reg [12:0] sdAddr_o // SDRAM row/column address
-	inout wire [15:0] sdData_io // Data to/from SDRAM
-	output reg sdDqmh_o	    // Enable upper-byte of SDRAM databus if true
+	output reg sdCke_o,         // Clock-enable to SDRAM
+	output reg sdCe_bo,	        // Chip-select to SDRAM
+	output reg sdRas_bo,	    // SDRAM row address strobe
+	output reg sdCas_bo,	    // SDRAM column address strobe
+	output reg sdWe_bo,	        // SDRAM write enable
+	output reg [1:0] sdBs_bo,   // SDRAM bank address
+	output reg [12:0] sdAddr_o, // SDRAM row/column address
+	inout wire [15:0] sdData_io, // Data to/from SDRAM
+	output reg sdDqmh_o,	    // Enable upper-byte of SDRAM databus if true
 	output reg sdDqml_o	    // Enable lower-byte of SDRAM databus if true
 );
 
