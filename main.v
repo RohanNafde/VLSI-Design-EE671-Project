@@ -170,15 +170,15 @@ begin
 				// 5. Eight refresh cycles.
 
 				state_x = ST_INIT_PRECHARGE;
-				timer_x = 20000;      // 200us wait
-				// timer_x = 2;          // for simulation
+				// timer_x = 20000;      // 200us wait
+				timer_x = 2;          // for simulation
 				sd_dqmu_x = 1'b1;
 				sd_dqml_x = 1'b1;
 			end
 			ST_INIT_PRECHARGE: begin
 				state_x = ST_INIT_REFRESH1;
-				refcnt_x = 8;         // 8 refresh cycles
-				// refcnt_r = 2;		 // for simulation
+				// refcnt_x = 8;         // 8 refresh cycles
+				refcnt_r = 2;		 // for simulation
 				cmd_x = CMD_PRECHARGE;
 				timer_x = 2;          // Trp = 20ns
 				bank_x = 2'b00;
@@ -195,7 +195,8 @@ begin
 			end
 			ST_INIT_MODE: begin
                 state_x = ST_INIT_REFRESH2;
-                refcnt_x = 8;         // 8 refresh cycles
+                // refcnt_x = 8;         // 8 refresh cycles
+				refcnt_r = 2;		 // for simulation
                 bank_x = 2'b00;
                 addr_x = MODE_REG;
                 cmd_x = CMD_MODE;
