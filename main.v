@@ -116,7 +116,7 @@ module sdram_simple (
 	assign sdCke_o     = cke_r;      // SDRAM clock enable
 	assign sdBs_o      = bank_r;     // SDRAM bank address
 	assign sdAddr_o    = addr_r;     // SDRAM address
-	assign sdData_io   = sd_dout_r when sd_busdir_r = '1' else (others => 'Z');   // SDRAM data bus.
+	assign sdData_io = (sd_busdir_r == 1'b1) ? sd_dout_r : 16'bz;   // SDRAM data bus.
 	assign sdDqmh_o    = sd_dqmu_r;  // SDRAM high data byte enable, active low
 	assign sdDqml_o    = sd_dqml_r;  // SDRAM low date byte enable, active low
 
