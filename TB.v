@@ -169,7 +169,13 @@ module tb_sdram_simple;
         #20;
         reset_i = 0;
         #1000; // Run simulation for 1000 ns
-        $stop; // Stop the simulation
+        $finish; // Stop the simulation
     end
+
+	initial
+	begin
+	$dumpfile("waveforms.vcd");
+	$dumpvars(0,dut);
+	end
 
 endmodule
