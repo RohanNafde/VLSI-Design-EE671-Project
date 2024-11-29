@@ -57,29 +57,35 @@ module sdram_simple (
 );
 
 	// SDRAM controller states
-    typedef enum logic [3:0] {
-        ST_INIT_WAIT, ST_INIT_PRECHARGE, ST_INIT_REFRESH1, ST_INIT_MODE,
-        ST_INIT_REFRESH2, ST_IDLE, ST_REFRESH, ST_ACTIVATE, ST_RCD,
-        ST_RW, ST_RAS1, ST_RAS2, ST_PRECHARGE
-    } fsm_state_type;
+    parameter ST_INIT_WAIT      = 4'b0000,
+			  ST_INIT_PRECHARGE = 4'b0001,
+			  ST_INIT_REFRESH1  = 4'b0010,
+			  ST_INIT_MODE      = 4'b0011,
+			  ST_INIT_REFRESH2  = 4'b0100,
+			  ST_IDLE           = 4'b0101,
+			  ST_REFRESH        = 4'b0110,
+			  ST_ACTIVATE       = 4'b0111,
+			  ST_RCD            = 4'b1000,
+			  ST_RW             = 4'b1001,
+			  ST_RAS1           = 4'b1010,
+			  ST_RAS2           = 4'b1011,
+			  ST_PRECHARGE      = 4'b1100;
 
-    fsm_state_type [3:0] state_r = ST_INIT_WAIT, state_x = ST_INIT_WAIT;
+    reg [3:0] state_r = ST_INIT_WAIT, state_x = ST_INIT_WAIT;
 
     // SDRAM mode register data
     localparam [12:0] MODE_REG = 13'b000_0_00_010_0_000; // Stays constant
 
     // SDRAM commands
-    typedef enum logic [3:0] {
-        CMD_ACTIVATE = 4'b0011,
-        CMD_PRECHARGE = 4'b0010,
-        CMD_WRITE = 4'b0100,
-        CMD_READ = 4'b0101,
-        CMD_MODE = 4'b0000,
-        CMD_NOP = 4'b0111,
-        CMD_REFRESH = 4'b0001
-    } cmd_type;
+	parameter CMD_ACTIVATE  = 4'b0011,
+			  CMD_PRECHARGE = 4'b0010,
+			  CMD_WRITE     = 4'b0100,
+			  CMD_READ      = 4'b0101,
+			  CMD_MODE      = 4'b0000,
+		 	  CMD_NOP       = 4'b0111,
+		 	  CMD_REFRESH   = 4'b0001;
 
-    cmd_type cmd_r, cmd_x;
+    reg [3:0] cmd_r, cmd_x;
 
     // Internal signals
 	reg [1:0] bank_s;
