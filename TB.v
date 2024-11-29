@@ -55,7 +55,7 @@ module tb_sdram_simple;
     wire sdRas_bo;
     wire sdCas_bo;
     wire sdWe_bo;
-    wire [1:0] sdBs_bo;
+    wire [1:0] sdBs_o;
     wire [12:0] sdAddr_o;
     wire sdDqmh_o;
     wire sdDqml_o;
@@ -92,7 +92,7 @@ module tb_sdram_simple;
         .sdRas_bo(sdRas_bo),
         .sdCas_bo(sdCas_bo),
         .sdWe_bo(sdWe_bo),
-        .sdBs_bo(sdBs_bo),
+        .sdBs_o(sdBs_o),
         .sdAddr_o(sdAddr_o),
         .sdData_io(sdData_io),
         .sdDqmh_o(sdDqmh_o),

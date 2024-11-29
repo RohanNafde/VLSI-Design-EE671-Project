@@ -39,21 +39,21 @@ module sdram_simple (
 	input wire [15:0] data_i,  // Data from host to SDRAM
 	input wire ub_i,           // Data upper byte enable, active low
 	input wire lb_i,           // Data lower byte enable, active low
-	output reg ready_o,       // Set to '1' when the memory is ready
+	output wire ready_o,       // Set to '1' when the memory is ready
 	output reg done_o,        // Read, write, or refresh, operation is done
-	output reg [15:0] data_o, // Data from SDRAM to host
+	output wire [15:0] data_o, // Data from SDRAM to host
 
 	// SDRAM Side
-	output reg sdCke_o,         // Clock-enable to SDRAM
-	output reg sdCe_bo,	        // Chip-select to SDRAM
-	output reg sdRas_bo,	    // SDRAM row address strobe
-	output reg sdCas_bo,	    // SDRAM column address strobe
-	output reg sdWe_bo,	        // SDRAM write enable
-	output reg [1:0] sdBs_bo,   // SDRAM bank address
-	output reg [12:0] sdAddr_o, // SDRAM row/column address
-	inout wire [15:0] sdData_io, // Data to/from SDRAM
-	output reg sdDqmh_o,	    // Enable upper-byte of SDRAM databus if true
-	output reg sdDqml_o	    // Enable lower-byte of SDRAM databus if true
+	output wire sdCke_o,         // Clock-enable to SDRAM
+	output wire sdCe_bo,	        // Chip-select to SDRAM
+	output wire sdRas_bo,	    // SDRAM row address strobe
+	output wire sdCas_bo,	    // SDRAM column address strobe
+	output wire sdWe_bo,	        // SDRAM write enable
+	output wire [1:0] sdBs_o,   // SDRAM bank address
+	output wire [12:0] sdAddr_o, // SDRAM row/column address
+	inout wire [15:0] sdData_io,// Data to/from SDRAM
+	output wire sdDqmh_o,	    // Enable upper-byte of SDRAM databus if true
+	output wire sdDqml_o	    // Enable lower-byte of SDRAM databus if true
 );
 
 	// SDRAM controller states
@@ -88,9 +88,9 @@ module sdram_simple (
     reg [3:0] cmd_r, cmd_x;
 
     // Internal signals
-	reg [1:0] bank_s;
-	reg [12:0] row_s;
-	reg [8:0] col_s;
+	wire [1:0] bank_s;
+	wire [12:0] row_s;
+	wire [8:0] col_s;
 	reg [12:0] addr_r;
 	reg [12:0] addr_x;
 	reg [15:0] sd_dout_r;
