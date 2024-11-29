@@ -98,8 +98,8 @@ module sdram_simple (
 	reg sd_busdir_r;
 	reg sd_busdir_x;
 
-	reg [15:0] timer_r, timer_x; // 0 to 20000
-	reg [3:0] refcnt_r, refcnt_x; // 0 to 8
+	integer timer_r, timer_x; // 0 to 20000
+	integer refcnt_r, refcnt_x; // 0 to 8
 
 	reg [1:0] bank_r, bank_x;
 	reg cke_r, cke_x;
