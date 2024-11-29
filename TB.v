@@ -73,8 +73,8 @@ module tb_sdram_simple;
     reg [2:0] state_r = ST_WAIT;
     reg [2:0] state_x = ST_WAIT;
 
-    // Instantiate the Unit Under Test (UUT)
-    sdram_simple uut (
+    // Instantiate the Device Under Test (DUT)
+    sdram_simple dut (
         .clk_100m0_i(clk_100m0_i),
         .reset_i(reset_i),
         .refresh_i(refresh_i),
