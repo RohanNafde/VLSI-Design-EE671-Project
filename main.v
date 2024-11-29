@@ -135,31 +135,31 @@ always @ (state_r, timer_r, refcnt_r, cke_r, addr_r, sd_dout_r, sd_busdir_r, sd_
     rw_i, refresh_i, addr_i, data_i, we_i, ub_i, lb_i,
     buf_dout_r, sdData_io)
 begin
-	state_x     = state_r;       // Stay in the same state unless changed.
-	timer_x     = timer_r;       // Hold the cycle timer by default.
-	refcnt_x    = refcnt_r;      // Hold the refresh timer by default.
-	cke_x       = cke_r;         // Stay in the same clock mode unless changed.
-	cmd_x       = CMD_NOP;       // Default to NOP unless changed.
-	bank_x      = bank_r;        // Register the SDRAM bank.
-	addr_x      = addr_r;        // Register the SDRAM address.
-	sd_dout_x   = sd_dout_r;     // Register the SDRAM write data.
-	sd_busdir_x = sd_busdir_r;   // Register the SDRAM bus tristate control.
-	sd_dqmu_x   = sd_dqmu_r;
-	sd_dqml_x   = sd_dqml_r;
-	buf_dout_x  = buf_dout_r;    // SDRAM to host data buffer.
+	state_x     <= state_r;       // Stay in the same state unless changed.
+	timer_x     <= timer_r;       // Hold the cycle timer by default.
+	refcnt_x    <= refcnt_r;      // Hold the refresh timer by default.
+	cke_x       <= cke_r;         // Stay in the same clock mode unless changed.
+	cmd_x       <= CMD_NOP;       // Default to NOP unless changed.
+	bank_x      <= bank_r;        // Register the SDRAM bank.
+	addr_x      <= addr_r;        // Register the SDRAM address.
+	sd_dout_x   <= sd_dout_r;     // Register the SDRAM write data.
+	sd_busdir_x <= sd_busdir_r;   // Register the SDRAM bus tristate control.
+	sd_dqmu_x   <= sd_dqmu_r;
+	sd_dqml_x   <= sd_dqml_r;
+	buf_dout_x  <= buf_dout_r;    // SDRAM to host data buffer.
 
-	ready_x     = ready_r;       // Always ready unless performing initialization.
-	done_o      = 1'b0;           // Done tick, single cycle.
+	ready_x     <= ready_r;       // Always ready unless performing initialization.
+	done_o      <= 1'b0;           // Done tick, single cycle.
 
 	if (timer_r != 0) begin
-			timer_x = timer_r - 1;  // Decrement the cycle timer.
+			timer_x <= timer_r - 1;  // Decrement the cycle timer.
 	end else begin
-		cke_x       = 1'b1;
-		bank_x      = bank_s;
+		cke_x       <= 1'b1;
+		bank_x      <= bank_s;
 		// A10 low for rd/wr commands to suppress auto-precharge.
-		addr_x      = {4'b0000, col_s};
-		sd_dqmu_x   = 1'b0;
-		sd_dqml_x   = 1'b0;
+		addr_x      <= {4'b0000, col_s};
+		sd_dqmu_x   <= 1'b0;
+		sd_dqml_x   <= 1'b0;
 
 		case (state_r)
 			ST_INIT_WAIT: begin
@@ -169,110 +169,110 @@ begin
 				// 4. Set mode register.
 				// 5. Eight refresh cycles.
 
-				state_x = ST_INIT_PRECHARGE;
-				// timer_x = 20000;      // 200us wait
-				timer_x = 2;          // for simulation
-				sd_dqmu_x = 1'b1;
-				sd_dqml_x = 1'b1;
+				state_x <= ST_INIT_PRECHARGE;
+				// timer_x <= 20000;      // 200us wait
+				timer_x <= 2;          // for simulation
+				sd_dqmu_x <= 1'b1;
+				sd_dqml_x <= 1'b1;
 			end
 			ST_INIT_PRECHARGE: begin
-				state_x = ST_INIT_REFRESH1;
-				// refcnt_x = 8;         // 8 refresh cycles
-				refcnt_r = 2;		 // for simulation
-				cmd_x = CMD_PRECHARGE;
-				timer_x = 2;          // Trp = 20ns
-				bank_x = 2'b00;
-				addr_x[10] = 1'b1;    // Precharge all banks
+				state_x <= ST_INIT_REFRESH1;
+				// refcnt_x <= 8;         // 8 refresh cycles
+				refcnt_r <= 2;		 // for simulation
+				cmd_x <= CMD_PRECHARGE;
+				timer_x <= 2;          // Trp = 20ns
+				bank_x <= 2'b00;
+				addr_x[10] <= 1'b1;    // Precharge all banks
 			end
 			ST_INIT_REFRESH1: begin
 				if (refcnt_r == 0) begin
-					state_x = ST_INIT_MODE;
+					state_x <= ST_INIT_MODE;
 				end else begin
-					refcnt_x = refcnt_r - 1;
-					cmd_x = CMD_REFRESH;
-					timer_x = 7;      // 70ns refresh
+					refcnt_x <= refcnt_r - 1;
+					cmd_x <= CMD_REFRESH;
+					timer_x <= 7;      // 70ns refresh
 				end
 			end
 			ST_INIT_MODE: begin
-                state_x = ST_INIT_REFRESH2;
-                // refcnt_x = 8;         // 8 refresh cycles
-				refcnt_r = 2;		 // for simulation
-                bank_x = 2'b00;
-                addr_x = MODE_REG;
-                cmd_x = CMD_MODE;
-                timer_x = 2;          // Trsc = 2 cycles
+                state_x <= ST_INIT_REFRESH2;
+                // refcnt_x <= 8;         // 8 refresh cycles
+				refcnt_r <= 2;		 // for simulation
+                bank_x <= 2'b00;
+                addr_x <= MODE_REG;
+                cmd_x <= CMD_MODE;
+                timer_x <= 2;          // Trsc = 2 cycles
             end
             ST_INIT_REFRESH2: begin
                 if (refcnt_r == 0) begin
-                    state_x = ST_IDLE;
-                    ready_x = 1'b1;
+                    state_x <= ST_IDLE;
+                    ready_x <= 1'b1;
                 end else begin
-                    refcnt_x = refcnt_r - 1;
-                    cmd_x = CMD_REFRESH;
-                    timer_x = 7;      // 70ns refresh
+                    refcnt_x <= refcnt_r - 1;
+                    cmd_x <= CMD_REFRESH;
+                    timer_x <= 7;      // 70ns refresh
                 end
             end
 			ST_IDLE: begin
 				// Handle idle state behavior
 				if (rw_i == 1'b1) begin
-					state_x = ST_ACTIVATE;  // Transition to ACTIVATE state
-					cmd_x = CMD_ACTIVATE;   // Send ACTIVATE command
-					addr_x = row_s;         // Set bank select and row address
+					state_x <= ST_ACTIVATE;  // Transition to ACTIVATE state
+					cmd_x <= CMD_ACTIVATE;   // Send ACTIVATE command
+					addr_x <= row_s;         // Set bank select and row address
 				end else if (refresh_i == 1'b1) begin
-					state_x = ST_REFRESH;   // Transition to REFRESH state
-					cmd_x = CMD_REFRESH;    // Send REFRESH command
-					timer_x = 7;            // Wait 7 cycles for refresh
+					state_x <= ST_REFRESH;   // Transition to REFRESH state
+					cmd_x <= CMD_REFRESH;    // Send REFRESH command
+					timer_x <= 7;            // Wait 7 cycles for refresh
 				end
 			end
 
 			ST_REFRESH: begin
-				state_x = ST_IDLE;          // Transition back to IDLE state
-				done_o = 1'b1;              // Indicate operation completion
+				state_x <= ST_IDLE;          // Transition back to IDLE state
+				done_o <= 1'b1;              // Indicate operation completion
 			end
 
 			ST_ACTIVATE: begin
 				// Prepare SDRAM for subsequent operations
-				state_x = ST_RCD;           // Transition to RCD (Row to Column delay) state
-				sd_dout_x = data_i;         // Register any input data for writing
+				state_x <= ST_RCD;           // Transition to RCD (Row to Column delay) state
+				sd_dout_x <= data_i;         // Register any input data for writing
 			end
 
 			ST_RCD: begin
 				// Handle Row to Column delay
-				state_x = ST_RW;            // Transition to READ/WRITE state
+				state_x <= ST_RW;            // Transition to READ/WRITE state
 				if (we_i == 1'b0) begin
-					cmd_x = CMD_WRITE;      // Issue WRITE command
-					sd_busdir_x = 1'b1;     // Enable data bus for writing
-					sd_dqmu_x = ub_i;       // Set upper byte mask
-					sd_dqml_x = lb_i;       // Set lower byte mask
+					cmd_x <= CMD_WRITE;      // Issue WRITE command
+					sd_busdir_x <= 1'b1;     // Enable data bus for writing
+					sd_dqmu_x <= ub_i;       // Set upper byte mask
+					sd_dqml_x <= lb_i;       // Set lower byte mask
 				end else begin
-					cmd_x = CMD_READ;       // Issue READ command
+					cmd_x <= CMD_READ;       // Issue READ command
 				end
 			end
 
 			ST_RW: begin
 				// Execute read or write operation
-				state_x = ST_RAS1;          // Transition to RAS1 (Row Access Strobe) state
-				sd_busdir_x = 1'b0;         // Disable data bus output
+				state_x <= ST_RAS1;          // Transition to RAS1 (Row Access Strobe) state
+				sd_busdir_x <= 1'b0;         // Disable data bus output
 			end
 
 			ST_RAS1: begin
 				// Register data from SDRAM
-				state_x = ST_RAS2;          // Transition to RAS2 state
-				buf_dout_x = sdData_io;     // Capture data from SDRAM into output buffer
+				state_x <= ST_RAS2;          // Transition to RAS2 state
+				buf_dout_x <= sdData_io;     // Capture data from SDRAM into output buffer
 			end
 
 			ST_RAS2: begin
 				// Handle precharge preparation
-				state_x = ST_PRECHARGE;     // Transition to PRECHARGE state
-				cmd_x = CMD_PRECHARGE;      // Issue PRECHARGE command
-				addr_x[10] = 1'b1;          // Set precharge all banks flag
+				state_x <= ST_PRECHARGE;     // Transition to PRECHARGE state
+				cmd_x <= CMD_PRECHARGE;      // Issue PRECHARGE command
+				addr_x[10] <= 1'b1;          // Set precharge all banks flag
 			end
 
 			ST_PRECHARGE: begin
 				// Complete precharge operation
-				state_x = ST_IDLE;          // Transition back to IDLE state
-				done_o = 1'b1;              // Indicate operation completion
-				timer_x = 1;                // Buffer to ensure host readiness before IDLE
+				state_x <= ST_IDLE;          // Transition back to IDLE state
+				done_o <= 1'b1;              // Indicate operation completion
+				timer_x <= 1;                // Buffer to ensure host readiness before IDLE
 			end
 		endcase
 	end

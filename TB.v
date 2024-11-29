@@ -111,53 +111,53 @@ module tb_sdram_simple;
 
     always @(state_r, ready_o, done_o) begin
         // Default values
-        state_x = state_r;
-        rw_i = 0;
-        we_i = 1;
-        ub_i = 0;
-        lb_i = 0;
+        state_x <= state_r;
+        rw_i <= 0;
+        we_i <= 1;
+        ub_i <= 0;
+        lb_i <= 0;
 
         case (state_r)
             ST_WAIT: begin
-                if (ready_o) state_x = ST_READ;
+                if (ready_o) state_x <= ST_READ;
             end
 
             ST_IDLE: begin
-                state_x = ST_IDLE;
+                state_x <= ST_IDLE;
             end
 
             ST_READ: begin
                 if (!done_o) begin
-                    rw_i = 1;
-                    addr_i = 24'b000000000000011000000001;
+                    rw_i <= 1;
+                    addr_i <= 24'b000000000000011000000001;
                 end else begin
-                    state_x = ST_WRITE;
+                    state_x <= ST_WRITE;
                 end
             end
 
             ST_WRITE: begin
                 if (!done_o) begin
-                    rw_i = 1;
-                    we_i = 0;
-                    addr_i = 24'b000000000000011000000001;
-                    data_i = 16'hADCD;
-                    ub_i = 1;
-                    lb_i = 0;
+                    rw_i <= 1;
+                    we_i <= 0;
+                    addr_i <= 24'b000000000000011000000001;
+                    data_i <= 16'hADCD;
+                    ub_i <= 1;
+                    lb_i <= 0;
                 end else begin
-                    state_x = ST_REFRESH;
+                    state_x <= ST_REFRESH;
                 end
             end
 
             ST_REFRESH: begin
                 if (!done_o) begin
-                    refresh_i = 1;
+                    refresh_i <= 1;
                 end else begin
-                    state_x = ST_IDLE;
+                    state_x <= ST_IDLE;
                 end
             end
 
             // default: begin
-            //     state_x = ST_IDLE;
+            //     state_x <= ST_IDLE;
             // end
         endcase
     end
